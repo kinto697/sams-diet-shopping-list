@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🛒 山姆减脂期购物清单 · 科学吃瘦</title>
+<style>
+  :root {
+    --bg: #f5f3ef;
+    --card: #ffffff;
+    --text: #1a1a1a;
+    --muted: #777;
+    --protein: #E53935;
+    --veggie: #43A047;
+    --carb: #FB8C00;
+    --fat: #FDD835;
+    --drink: #1E88E5;
+    --snack: #8E24AA;
+    --border: #e8e5e0;
+    --shadow: 0 2px 16px rgba(0,0,0,0.06);
+    --radius: 16px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Noto Sans SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Hero ── */
+  .hero {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 30%, #1a3c1a 100%);
+    color: #fff;
+    text-align: center;
+    padding: 48px 20px 56px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 40px;
+    background: var(--bg);
+    border-radius: 40px 40px 0 0;
+  }
+  .hero .badge {
+    display: inline-block;
+    background: rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 5px 16px;
+    border-radius: 20px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: clamp(30px, 5vw, 48px);
+    font-weight: 900;
+    letter-spacing: 3px;
+    margin-bottom: 6px;
+  }
+  .hero .sub {
+    font-size: 16px;
+    opacity: 0.85;
+  }
+  .hero .principles {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 20px;
+  }
+  .hero .principle {
+    background: rgba(255,255,255,0.1);
+    backdrop-filter: blur(5px);
+    border-radius: 12px;
+    padding: 10px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+
+  /* ── Container ── */
+  .container { max-width: 900px; margin: -20px auto 0; padding: 0 20px; position: relative; z-index: 1; }
+
+  /* ── Section ── */
+  .section { margin-bottom: 32px; }
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .section-icon {
+    width: 44px; height: 44px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+  .si-protein { background: var(--protein); }
+  .si-veggie { background: var(--veggie); }
+  .si-carb { background: var(--carb); }
+  .si-fat { background: var(--fat); color: #333; }
+  .si-drink { background: var(--drink); }
+  .si-snack { background: var(--snack); }
+  .si-tip { background: #555; }
+
+  .section-title { font-size: 20px; font-weight: 800; }
+  .section-sub { font-size: 13px; color: var(--muted); }
+
+  /* ── Product Grid ── */
+  .product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 14px;
+  }
+  .product-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px 20px;
+    box-shadow: var(--shadow);
+    transition: transform 0.2s, box-shadow 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  }
+  .product-card .color-bar {
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    border-radius: 2px;
+  }
+  .cb-protein { background: var(--protein); }
+  .cb-veggie { background: var(--veggie); }
+  .cb-carb { background: var(--carb); }
+  .cb-fat { background: var(--fat); }
+  .cb-drink { background: var(--drink); }
+  .cb-snack { background: var(--snack); }
+
+  .product-card .name {
+    font-size: 17px;
+    font-weight: 700;
+    margin-bottom: 4px;
+  }
+  .product-card .eng {
+    font-size: 11px;
+    color: #bbb;
+    margin-bottom: 8px;
+    letter-spacing: 0.5px;
+  }
+  .product-card .tags {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .product-card .tag {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 10px;
+    font-weight: 600;
+  }
+  .tag-pro { background: #FFEBEE; color: #c62828; }
+  .tag-low { background: #E8F5E9; color: #2e7d32; }
+  .tag-fiber { background: #FFF3E0; color: #e65100; }
+  .tag-omega { background: #FFF8E1; color: #f57f17; }
+  .tag-zero { background: #E3F2FD; color: #1565c0; }
+  .tag-full { background: #F3E5F5; color: #6a1b9a; }
+  .tag-gut { background: #E0F7FA; color: #00695c; }
+
+  .product-card .info-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 6px;
+  }
+  .product-card .price {
+    font-size: 18px;
+    font-weight: 800;
+    color: #c62828;
+  }
+  .product-card .price .unit {
+    font-size: 11px;
+    font-weight: 500;
+    color: var(--muted);
+  }
+  .product-card .cal {
+    font-size: 12px;
+    color: var(--muted);
+    text-align: right;
+  }
+
+  /* ── Macro Summary ── */
+  .macro-bar-wrap {
+    background: var(--card);
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    box-shadow: var(--shadow);
+    margin-bottom: 28px;
+  }
+  .macro-bar-wrap h3 { font-size: 16px; margin-bottom: 14px; }
+  .macro-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 10px;
+  }
+  .macro-label {
+    width: 60px;
+    font-size: 13px;
+    font-weight: 700;
+    text-align: right;
+    flex-shrink: 0;
+  }
+  .macro-track {
+    flex: 1;
+    height: 10px;
+    background: #eee;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  .macro-fill {
+    height: 100%;
+    border-radius: 5px;
+    transition: width 0.6s ease;
+  }
+  .mf-protein { background: var(--protein); }
+  .mf-carb { background: var(--carb); }
+  .mf-fat { background: var(--fat); }
+  .macro-pct { font-size: 12px; font-weight: 700; width: 40px; }
+
+  /* ── Tips ── */
+  .tips-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 14px;
+  }
+  .tip-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 18px;
+    box-shadow: var(--shadow);
+    text-align: center;
+  }
+  .tip-card .emoji { font-size: 32px; margin-bottom: 8px; }
+  .tip-card h4 { font-size: 15px; margin-bottom: 4px; }
+  .tip-card p { font-size: 13px; color: var(--muted); line-height: 1.5; }
+
+  /* ── Footer ── */
+  footer {
+    text-align: center;
+    padding: 32px 20px;
+    color: #aaa;
+    font-size: 12px;
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 600px) {
+    .hero { padding: 36px 16px 44px; }
+    .product-grid { grid-template-columns: 1fr; }
+    .tips-grid { grid-template-columns: 1fr 1fr; }
+    .hero .principles { gap: 8px; }
+    .hero .principle { font-size: 11px; padding: 6px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══ HERO ═══ -->
+<div class="hero">
+  <div class="badge">🏋️ SAM'S CLUB · 减脂专供</div>
+  <h1>山姆减脂购物清单</h1>
+  <p class="sub">高蛋白 · 低GI · 好脂肪 · 吃饱也能瘦</p>
+  <div class="principles">
+    <span class="principle">🥩 蛋白质优先</span>
+    <span class="principle">🥬 纤维拉满</span>
+    <span class="principle">🍚 慢碳供能</span>
+    <span class="principle">🥑 优质脂肪</span>
+    <span class="principle">🚫 拒绝空热量</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══ MACRO SUMMARY ═══ -->
+  <div class="section">
+    <div class="macro-bar-wrap">
+      <h3>📊 减脂期宏观营养素参考配比</h3>
+      <div class="macro-row">
+        <span class="macro-label">蛋白质</span>
+        <div class="macro-track"><div class="macro-fill mf-protein" style="width:40%"></div></div>
+        <span class="macro-pct">40%</span>
+      </div>
+      <div class="macro-row">
+        <span class="macro-label">碳水</span>
+        <div class="macro-track"><div class="macro-fill mf-carb" style="width:30%"></div></div>
+        <span class="macro-pct">30%</span>
+      </div>
+      <div class="macro-row">
+        <span class="macro-label">脂肪</span>
+        <div class="macro-track"><div class="macro-fill mf-fat" style="width:30%"></div></div>
+        <span class="macro-pct">30%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ PROTEIN ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-protein">🥩</div>
+      <div>
+        <div class="section-title">蛋白质 · 肌肉守护者</div>
+        <div class="section-sub">减脂期蛋白质摄入要拉满，保护肌肉不流失</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🐔 Member's Mark 鸡胸肉</div>
+        <div class="eng">Chicken Breast · 冷冻装</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-low">低脂</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥59.9 <span class="unit">/ 2.5kg</span></span>
+          <span class="cal">≈ 110kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🦐 Member's Mark 冷冻虾仁</div>
+        <div class="eng">Frozen Shrimp · 去壳去虾线</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-low">零碳</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥89.9 <span class="unit">/ 908g</span></span>
+          <span class="cal">≈ 85kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🐟 挪威三文鱼排</div>
+        <div class="eng">Norwegian Salmon Fillet</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-omega">Omega-3</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥129 <span class="unit">/ 约500g</span></span>
+          <span class="cal">≈ 208kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🥚 Member's Mark 鸡蛋</div>
+        <div class="eng">Free-Range Eggs · 30枚装</div>
+        <div class="tags">
+          <span class="tag tag-pro">完全蛋白</span>
+          <span class="tag tag-low">高饱腹</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥26.9 <span class="unit">/ 30枚</span></span>
+          <span class="cal">≈ 144kcal / 2个</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🥩 澳洲谷饲牛腱子</div>
+        <div class="eng">Australian Beef Shank</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-low">低脂红肉</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥89.9 <span class="unit">/ kg</span></span>
+          <span class="cal">≈ 125kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🥛 希腊酸奶 · 0脂</div>
+        <div class="eng">Greek Yogurt 0% Fat · 多口味</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-gut">益生菌</span>
+          <span class="tag tag-zero">0脂</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥49.9 <span class="unit">/ 6杯</span></span>
+          <span class="cal">≈ 100kcal / 杯</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">💪 Optimum Nutrition 蛋白粉</div>
+        <div class="eng">Gold Standard Whey · 双重巧克力</div>
+        <div class="tags">
+          <span class="tag tag-pro">24g蛋白/勺</span>
+          <span class="tag tag-low">低卡</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥399 <span class="unit">/ 2.27kg</span></span>
+          <span class="cal">≈ 120kcal / 勺</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-protein"></div>
+        <div class="name">🐟  Member's Mark 金枪鱼罐头</div>
+        <div class="eng">Canned Tuna in Water</div>
+        <div class="tags">
+          <span class="tag tag-pro">即食蛋白</span>
+          <span class="tag tag-low">零碳</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥69.9 <span class="unit">/ 6罐</span></span>
+          <span class="cal">≈ 100kcal / 罐</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ VEGGIE ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-veggie">🥬</div>
+      <div>
+        <div class="section-title">蔬菜菌菇 · 纤维弹药库</div>
+        <div class="section-sub">热量忽略不计，维生素矿物质拉满，每餐饭量的 1/2 应该是蔬菜</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🥦 冷冻西兰花</div>
+        <div class="eng">Frozen Broccoli Florets</div>
+        <div class="tags">
+          <span class="tag tag-fiber">高纤维</span>
+          <span class="tag tag-low">超低卡</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥19.9 <span class="unit">/ 1kg</span></span>
+          <span class="cal">≈ 34kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🥬 有机混合沙拉菜</div>
+        <div class="eng">Organic Mixed Salad Greens</div>
+        <div class="tags">
+          <span class="tag tag-low">即食</span>
+          <span class="tag tag-fiber">高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥29.9 <span class="unit">/ 454g</span></span>
+          <span class="cal">≈ 20kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🍅 串收番茄</div>
+        <div class="eng">Cherry Tomatoes on Vine</div>
+        <div class="tags">
+          <span class="tag tag-low">低GI</span>
+          <span class="tag tag-fiber">番茄红素</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥25.9 <span class="unit">/ 盒</span></span>
+          <span class="cal">≈ 18kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🍄 混合蘑菇拼盘</div>
+        <div class="eng">Mixed Mushroom Medley</div>
+        <div class="tags">
+          <span class="tag tag-low">低卡</span>
+          <span class="tag tag-gut">膳食纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥32.9 <span class="unit">/ 盒</span></span>
+          <span class="cal">≈ 22kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🥒 水果黄瓜</div>
+        <div class="eng">Mini Cucumbers · 即食</div>
+        <div class="tags">
+          <span class="tag tag-zero">近乎零卡</span>
+          <span class="tag tag-low">高水分</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥19.9 <span class="unit">/ 袋</span></span>
+          <span class="cal">≈ 15kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-veggie"></div>
+        <div class="name">🫑 三色甜椒</div>
+        <div class="eng">Tri-Color Bell Peppers</div>
+        <div class="tags">
+          <span class="tag tag-fiber">VC炸弹</span>
+          <span class="tag tag-low">低卡</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥29.9 <span class="unit">/ 袋</span></span>
+          <span class="cal">≈ 31kcal / 100g</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ SMART CARBS ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-carb">🍠</div>
+      <div>
+        <div class="section-title">慢碳主食 · 能量稳定器</div>
+        <div class="section-sub">低GI碳水，避免血糖过山车，训练日适当加量</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🍠 红薯 · 紫薯</div>
+        <div class="eng">Sweet Potatoes · 散装</div>
+        <div class="tags">
+          <span class="tag tag-fiber">低GI</span>
+          <span class="tag tag-low">慢碳</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥19.9 <span class="unit">/ 袋</span></span>
+          <span class="cal">≈ 86kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🌾 Member's Mark 燕麦片</div>
+        <div class="eng">Rolled Oats · 无添加</div>
+        <div class="tags">
+          <span class="tag tag-fiber">高纤维</span>
+          <span class="tag tag-low">慢碳</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥39.9 <span class="unit">/ 2.5kg</span></span>
+          <span class="cal">≈ 367kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🍚 三色藜麦</div>
+        <div class="eng">Tri-Color Quinoa</div>
+        <div class="tags">
+          <span class="tag tag-pro">完全蛋白</span>
+          <span class="tag tag-fiber">高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥49.9 <span class="unit">/ 1kg</span></span>
+          <span class="cal">≈ 368kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🍞 全麦英式麦芬</div>
+        <div class="eng">Whole Wheat English Muffins</div>
+        <div class="tags">
+          <span class="tag tag-fiber">全谷物</span>
+          <span class="tag tag-low">低GI</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥29.9 <span class="unit">/ 6个</span></span>
+          <span class="cal">≈ 130kcal / 个</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🌽 冷冻甜玉米粒</div>
+        <div class="eng">Frozen Sweet Corn</div>
+        <div class="tags">
+          <span class="tag tag-fiber">膳食纤维</span>
+          <span class="tag tag-low">粗粮</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥22.9 <span class="unit">/ 1kg</span></span>
+          <span class="cal">≈ 86kcal / 100g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-carb"></div>
+        <div class="name">🍝 鹰嘴豆意面</div>
+        <div class="eng">Chickpea Pasta</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白面</span>
+          <span class="tag tag-fiber">高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥39.9 <span class="unit">/ 盒</span></span>
+          <span class="cal">≈ 340kcal / 100g</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ HEALTHY FATS ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-fat">🥑</div>
+      <div>
+        <div class="section-title">优质脂肪 · 激素好帮手</div>
+        <div class="section-sub">适量摄入，维持激素平衡，帮助脂溶性维生素吸收</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-fat"></div>
+        <div class="name">🥑 牛油果</div>
+        <div class="eng">Hass Avocados · 6颗装</div>
+        <div class="tags">
+          <span class="tag tag-omega">单不饱和脂肪</span>
+          <span class="tag tag-fiber">高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥39.9 <span class="unit">/ 6颗</span></span>
+          <span class="cal">≈ 160kcal / 半颗</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-fat"></div>
+        <div class="name">🥜 Member's Mark 无盐混合坚果</div>
+        <div class="eng">Unsalted Mixed Nuts</div>
+        <div class="tags">
+          <span class="tag tag-omega">好脂肪</span>
+          <span class="tag tag-pro">植物蛋白</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥99.9 <span class="unit">/ 1.13kg</span></span>
+          <span class="cal">≈ 170kcal / 30g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-fat"></div>
+        <div class="name">🫒 特级初榨橄榄油</div>
+        <div class="eng">Extra Virgin Olive Oil</div>
+        <div class="tags">
+          <span class="tag tag-omega">单不饱和</span>
+          <span class="tag tag-low">冷压</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥89.9 <span class="unit">/ 1L</span></span>
+          <span class="cal">≈ 120kcal / 15ml</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-fat"></div>
+        <div class="name">🌰 奇亚籽</div>
+        <div class="eng">Chia Seeds</div>
+        <div class="tags">
+          <span class="tag tag-omega">Omega-3</span>
+          <span class="tag tag-fiber">超高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥49.9 <span class="unit">/ 袋</span></span>
+          <span class="cal">≈ 60kcal / 15g</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ DRINKS ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-drink">🥤</div>
+      <div>
+        <div class="section-title">饮品 · 零卡续命</div>
+        <div class="section-sub">多喝水！多喝水！多喝水！这些帮你告别含糖饮料</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-drink"></div>
+        <div class="name">☕ Member's Mark 冷萃咖啡液</div>
+        <div class="eng">Cold Brew Coffee Liquid</div>
+        <div class="tags">
+          <span class="tag tag-zero">0卡</span>
+          <span class="tag tag-low">促代谢</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥59.9 <span class="unit">/ 12条</span></span>
+          <span class="cal">≈ 5kcal / 条</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-drink"></div>
+        <div class="name">🍵 无糖乌龙茶</div>
+        <div class="eng">Unsweetened Oolong Tea</div>
+        <div class="tags">
+          <span class="tag tag-zero">0卡</span>
+          <span class="tag tag-zero">0糖</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥49.9 <span class="unit">/ 15瓶</span></span>
+          <span class="cal">≈ 0kcal</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-drink"></div>
+        <div class="name">🫧 气泡水 · 原味</div>
+        <div class="eng">Sparkling Water · Plain</div>
+        <div class="tags">
+          <span class="tag tag-zero">0卡</span>
+          <span class="tag tag-zero">0糖</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥39.9 <span class="unit">/ 24罐</span></span>
+          <span class="cal">≈ 0kcal</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-drink"></div>
+        <div class="name">🥥 Member's Mark 椰子水</div>
+        <div class="eng">Coconut Water · 无添加糖</div>
+        <div class="tags">
+          <span class="tag tag-low">天然电解质</span>
+          <span class="tag tag-low">低卡</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥59.9 <span class="unit">/ 12瓶</span></span>
+          <span class="cal">≈ 45kcal / 瓶</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ SNACKS ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-snack">🍪</div>
+      <div>
+        <div class="section-title">解馋零食 · 无罪恶感</div>
+        <div class="section-sub">嘴馋的时候选这些，不要压抑天性但要选对东西</div>
+      </div>
+    </div>
+    <div class="product-grid">
+
+      <div class="product-card">
+        <div class="color-bar cb-snack"></div>
+        <div class="name">🍮 零卡果冻</div>
+        <div class="eng">Zero Calorie Jelly Cups</div>
+        <div class="tags">
+          <span class="tag tag-zero">0卡</span>
+          <span class="tag tag-zero">0糖</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥29.9 <span class="unit">/ 12杯</span></span>
+          <span class="cal">≈ 0kcal</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-snack"></div>
+        <div class="name">🫘 烘烤鹰嘴豆</div>
+        <div class="eng">Roasted Chickpeas · 低盐</div>
+        <div class="tags">
+          <span class="tag tag-pro">植物蛋白</span>
+          <span class="tag tag-fiber">高纤维</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥29.9 <span class="unit">/ 袋</span></span>
+          <span class="cal">≈ 120kcal / 30g</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-snack"></div>
+        <div class="name">🍫 蛋白棒 · 低糖版</div>
+        <div class="eng">Protein Bars · Low Sugar</div>
+        <div class="tags">
+          <span class="tag tag-pro">高蛋白</span>
+          <span class="tag tag-low">低糖</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥89.9 <span class="unit">/ 12支</span></span>
+          <span class="cal">≈ 180kcal / 支</span>
+        </div>
+      </div>
+
+      <div class="product-card">
+        <div class="color-bar cb-snack"></div>
+        <div class="name">🍘 海苔脆片</div>
+        <div class="eng">Seaweed Crisps · 原味</div>
+        <div class="tags">
+          <span class="tag tag-low">低卡</span>
+          <span class="tag tag-zero">高碘</span>
+        </div>
+        <div class="info-row">
+          <span class="price">¥35.9 <span class="unit">/ 大包装</span></span>
+          <span class="cal">≈ 30kcal / 包</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ TIPS ═══ -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-icon si-tip">💡</div>
+      <div>
+        <div class="section-title">山姆减脂采购兵法</div>
+        <div class="section-sub">过来人的血泪经验，收藏这一页就够了</div>
+      </div>
+    </div>
+    <div class="tips-grid">
+      <div class="tip-card">
+        <div class="emoji">📋</div>
+        <h4>列清单再进店</h4>
+        <p>山姆的试吃和陈列是魔鬼，不按清单买必超预算，热量也容易超标</p>
+      </div>
+      <div class="tip-card">
+        <div class="emoji">❄️</div>
+        <h4>冷冻区优先扫</h4>
+        <p>冷冻蔬菜、冷冻虾仁、鸡胸肉——营养不输新鲜、保质期长、不浪费</p>
+      </div>
+      <div class="tip-card">
+        <div class="emoji">🚫</div>
+        <h4>避开烘焙区</h4>
+        <p>瑞士卷、牛角包、提拉米苏……山姆最危险的地方。减脂期直接不经过！</p>
+      </div>
+      <div class="tip-card">
+        <div class="emoji">📦</div>
+        <h4>大包装分装术</h4>
+        <p>买回来后立刻分成小份，按每顿的量装袋，冷冻保存。避免一次解冻太多</p>
+      </div>
+      <div class="tip-card">
+        <div class="emoji">🏷️</div>
+        <h4>学会看营养标签</h4>
+        <p>重点看三个数：每100g蛋白质含量、添加糖克数、配料表长度</p>
+      </div>
+      <div class="tip-card">
+        <div class="emoji">🕐</div>
+        <h4>训练日 vs 休息日</h4>
+        <p>训练日碳水适当翻倍（燕麦+红薯），休息日碳水减半、蛋白质不变</p>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<footer>
+  <p>🛒 山姆减脂购物清单 · 科学吃瘦不挨饿</p>
+  <p style="margin-top:4px;">记住：减脂靠的是热量缺口，不是饿肚子。吃对东西，吃饱也能瘦 💪</p>
+</footer>
+
+</body>
+</html>
